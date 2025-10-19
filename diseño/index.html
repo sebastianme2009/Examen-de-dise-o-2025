@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Propina</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #4a6fa5;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+        }
+
+        main {
+            padding: 30px;
+        }
+
+        .calculator {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #4a6fa5;
+            outline: none;
+        }
+
+        .result-section {
+            margin: 25px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .result-section h2 {
+            margin-bottom: 15px;
+            color: #4a6fa5;
+            font-size: 1.3rem;
+        }
+
+        .calculation-details p {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .total {
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .pay-btn:hover {
+            background-color: #3a5a80;
+        }
+
+        .thank-you {
+            text-align: center;
+            padding: 30px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .thank-you h2 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #f0f0f0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            main {
+                padding: 20px;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Calculadora de Propina</h1>
+        </header>
+        
+        <main>
+            <div class="calculator">
+                <form id="tipForm">
+                    <div class="form-group">
+                        <label for="amount">Monto de la cuenta ($):</label>
+                        <input type="number" id="amount" name="amount" min="0" step="0.01" required>
+                    </div>
+                    
+                    <div class="result-section">
+                        <h2>Detalle del cálculo:</h2>
+                        <div class="calculation-details">
+                            <p>Monto original: $<span id="originalAmount">0.00</span></p>
+                            <p>Impuesto (10%): $<span id="taxAmount">0.00</span></p>
+                            <p class="total">Total a pagar: $<span id="totalAmount">0.00</span></p>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="payButton" class="pay-btn">Pagar</button>
+                </form>
+                
+                <div id="thankYouMessage" class="thank-you hidden">
+                    <h2>¡Gracias por su pago!</h2>
+                    <p>Su transacción ha sido procesada exitosamente.</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Proyecto desarrollado para Unidad Educativa Montepiedra</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const amountInput = document.getElementById('amount');
+            const originalAmountSpan = document.getElementById('originalAmount');
+            const taxAmountSpan = document.getElementById('taxAmount');
+            const totalAmountSpan = document.getElementById('totalAmount');
+            const payButton = document.getElementById('payButton');
+            const thankYouMessage = document.getElementById('thankYouMessage');
+            
+            // Calcular impuesto y total cuando cambia el monto
+            amountInput.addEventListener('input', function() {
+                const amount = parseFloat(amountInput.value) || 0;
+                const taxRate = 0.10; // 10% de impuesto
+                const tax = amount * taxRate;
+                const total = amount + tax;
+                
+                // Actualizar los valores en la interfaz
+                originalAmountSpan.textContent = amount.toFixed(2);
+                taxAmountSpan.textContent = tax.toFixed(2);
+                totalAmountSpan.textContent = total.toFixed(2);
+            });
+            
+            // Mostrar mensaje de agradecimiento al hacer clic en "Pagar"
+            payButton.addEventListener('click', function() {
+                // Ocultar el formulario y mostrar el mensaje de agradecimiento
+                document.querySelector('form').style.display = 'none';
+                thankYouMessage.classList.remove('hidden');
+                
+                // Opcional: Deshabilitar el botón después de hacer clic
+                payButton.disabled = true;
+            });
+        });
+    </script>
+</body>
+</html>
